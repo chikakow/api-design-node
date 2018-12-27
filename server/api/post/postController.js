@@ -2,7 +2,10 @@ var Post = require('./postModel');
 var _ = require('lodash');
 
 exports.params = function(req, res, next, id) {
-  Post.findById(id).then(
+  Post.findById(id)
+  .populate('author categories')
+  .exec()
+  .then(
     function(post) {
       if (!post) {
         next(new Error('No post with that id'));
@@ -18,7 +21,10 @@ exports.params = function(req, res, next, id) {
 };
 
 exports.get = function(req, res, next) {
-  Post.find({}).then(
+  Post.find({})
+  .populate('author categories')
+  .exec()
+  .then(
     posts => {
       res.json(posts);
     },

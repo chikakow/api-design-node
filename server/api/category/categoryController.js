@@ -3,10 +3,30 @@ var _ = require('lodash');
 
 exports.params = function(req, res, next, id) {
   // use the id and attach the category to req
+  Category.findById(id).then(
+    category => {
+      if (!category) {
+        next(new Error('No category with that id'));
+      } else {
+        req.category = category;
+        next();
+      }
+    },
+    err => {
+      next(err);
+    }
+  );
 };
 
 exports.get = function(req, res, next) {
-
+  Category.find({}).then(
+    categories => {
+      res.json(categories);
+    },
+    err => {
+      next(err);
+    }
+  );
 };
 
 exports.getOne = function(req, res, next) {
@@ -27,18 +47,20 @@ exports.put = function(req, res, next) {
     } else {
       res.json(saved);
     }
-  })
+  });
 };
 
 exports.post = function(req, res, next) {
   var newcategory = req.body;
 
-  Category.create(newcategory)
-    .then(function(category) {
+  Category.create(newcategory).then(
+    function(category) {
       res.json(category);
-    }, function(err) {
+    },
+    function(err) {
       next(err);
-    });
+    }
+  );
 };
 
 exports.delete = function(req, res, next) {

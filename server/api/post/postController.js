@@ -2,21 +2,30 @@ var Post = require('./postModel');
 var _ = require('lodash');
 
 exports.params = function(req, res, next, id) {
-  Post.findById(id)
-    .then(function(post) {
+  Post.findById(id).then(
+    function(post) {
       if (!post) {
         next(new Error('No post with that id'));
       } else {
         req.post = post;
         next();
       }
-    }, function(err) {
+    },
+    function(err) {
       next(err);
-    });
+    }
+  );
 };
 
 exports.get = function(req, res, next) {
-  // need to populate here
+  Post.find({}).then(
+    posts => {
+      res.json(posts);
+    },
+    err => {
+      next(err);
+    }
+  );
 };
 
 exports.getOne = function(req, res, next) {
@@ -37,18 +46,20 @@ exports.put = function(req, res, next) {
     } else {
       res.json(saved);
     }
-  })
+  });
 };
 
 exports.post = function(req, res, next) {
   var newpost = req.body;
 
-  Post.create(newpost)
-    .then(function(post) {
+  Post.create(newpost).then(
+    function(post) {
       res.json(post);
-    }, function(err) {
+    },
+    function(err) {
       next(err);
-    });
+    }
+  );
 };
 
 exports.delete = function(req, res, next) {

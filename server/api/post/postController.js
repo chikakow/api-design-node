@@ -62,7 +62,7 @@ exports.post = function(req, res, next) {
 };
 
 exports.delete = function(req, res, next) {
-  req.post.remove(function(err, removed) {
+  req.post.deleteOne(function(err, removed) {
     if (err) {
       next(err);
     } else {

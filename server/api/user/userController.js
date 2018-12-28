@@ -57,7 +57,7 @@ exports.post = function(req, res, next) {
 };
 
 exports.delete = function(req, res, next) {
-  req.user.remove(function(err, removed) {
+  req.user.deleteOne(function(err, removed) {
     if (err) {
       next(err);
     } else {
